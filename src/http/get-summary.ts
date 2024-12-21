@@ -1,4 +1,4 @@
-type SummaryProps = {
+type SummaryRequest = {
   completed: number
   total: number
   goalsPerDay: Record<
@@ -11,7 +11,7 @@ type SummaryProps = {
   >
 }
 
-export async function getSummary(): Promise<SummaryProps> {
+export async function getSummary(): Promise<SummaryRequest> {
   const response = await fetch('http://localhost:3333/summary')
 
   const data = await response.json()
