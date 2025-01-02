@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently npm:dev:*",
     "dev:orval": "orval -w",
-    "dev:vite": "vite",
+    "dev:vite": "vite --port 3000",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
