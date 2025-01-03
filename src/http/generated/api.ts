@@ -21,6 +21,7 @@ import type {
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query'
+import { http } from '../client';
 export type GetUserLevelAndExperience200 = {
   experience: number;
   experienceToNextLevel: number;
@@ -119,6 +120,8 @@ export type GetPendingGoals200 = {
 
 
 
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
+
 
 /**
  * Get pending goals
@@ -137,19 +140,14 @@ export const getGetPendingGoalsUrl = () => {
 
 export const getPendingGoals = async ( options?: RequestInit): Promise<getPendingGoalsResponse> => {
   
-  const res = await fetch(getGetPendingGoalsUrl(),
+  return http<Promise<getPendingGoalsResponse>>(getGetPendingGoalsUrl(),
   {      
     ...options,
     method: 'GET'
     
     
   }
-
-  )
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
+);}
 
 
 
@@ -158,16 +156,16 @@ export const getGetPendingGoalsQueryKey = () => {
     }
 
     
-export const getGetPendingGoalsQueryOptions = <TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, fetch?: RequestInit}
+export const getGetPendingGoalsQueryOptions = <TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, request?: SecondParameter<typeof http>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetPendingGoalsQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPendingGoals>>> = ({ signal }) => getPendingGoals({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPendingGoals>>> = ({ signal }) => getPendingGoals({ signal, ...requestOptions });
 
       
 
@@ -187,7 +185,7 @@ export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingG
           TError,
           TData
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof http>}
 
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>(
@@ -197,16 +195,16 @@ export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingG
           TError,
           TData
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 
 export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
@@ -239,7 +237,7 @@ export const getCreateGoalUrl = () => {
 
 export const createGoal = async (createGoalBody: CreateGoalBody, options?: RequestInit): Promise<createGoalResponse> => {
   
-  const res = await fetch(getCreateGoalUrl(),
+  return http<Promise<createGoalResponse>>(getCreateGoalUrl(),
   {      
     ...options,
     method: 'POST',
@@ -247,20 +245,15 @@ export const createGoal = async (createGoalBody: CreateGoalBody, options?: Reque
     body: JSON.stringify(
       createGoalBody,)
   }
-
-  )
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
+);}
 
 
 
 
 export const getCreateGoalMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGoal>>, TError,{data: CreateGoalBody}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGoal>>, TError,{data: CreateGoalBody}, TContext>, request?: SecondParameter<typeof http>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createGoal>>, TError,{data: CreateGoalBody}, TContext> => {
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
@@ -268,7 +261,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGoal>>, {data: CreateGoalBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  createGoal(data,fetchOptions)
+          return  createGoal(data,requestOptions)
         }
 
         
@@ -281,7 +274,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
     export type CreateGoalMutationError = unknown
 
     export const useCreateGoal = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGoal>>, TError,{data: CreateGoalBody}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGoal>>, TError,{data: CreateGoalBody}, TContext>, request?: SecondParameter<typeof http>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof createGoal>>,
         TError,
@@ -311,7 +304,7 @@ export const getCreateCompletionUrl = () => {
 
 export const createCompletion = async (createCompletionBody: CreateCompletionBody, options?: RequestInit): Promise<createCompletionResponse> => {
   
-  const res = await fetch(getCreateCompletionUrl(),
+  return http<Promise<createCompletionResponse>>(getCreateCompletionUrl(),
   {      
     ...options,
     method: 'POST',
@@ -319,20 +312,15 @@ export const createCompletion = async (createCompletionBody: CreateCompletionBod
     body: JSON.stringify(
       createCompletionBody,)
   }
-
-  )
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
+);}
 
 
 
 
 export const getCreateCompletionMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCompletion>>, TError,{data: CreateCompletionBody}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCompletion>>, TError,{data: CreateCompletionBody}, TContext>, request?: SecondParameter<typeof http>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createCompletion>>, TError,{data: CreateCompletionBody}, TContext> => {
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
@@ -340,7 +328,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCompletion>>, {data: CreateCompletionBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  createCompletion(data,fetchOptions)
+          return  createCompletion(data,requestOptions)
         }
 
         
@@ -353,7 +341,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
     export type CreateCompletionMutationError = unknown
 
     export const useCreateCompletion = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCompletion>>, TError,{data: CreateCompletionBody}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCompletion>>, TError,{data: CreateCompletionBody}, TContext>, request?: SecondParameter<typeof http>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof createCompletion>>,
         TError,
@@ -390,19 +378,14 @@ export const getGetWeekSummaryUrl = (params?: GetWeekSummaryParams,) => {
 
 export const getWeekSummary = async (params?: GetWeekSummaryParams, options?: RequestInit): Promise<getWeekSummaryResponse> => {
   
-  const res = await fetch(getGetWeekSummaryUrl(params),
+  return http<Promise<getWeekSummaryResponse>>(getGetWeekSummaryUrl(params),
   {      
     ...options,
     method: 'GET'
     
     
   }
-
-  )
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
+);}
 
 
 
@@ -411,16 +394,16 @@ export const getGetWeekSummaryQueryKey = (params?: GetWeekSummaryParams,) => {
     }
 
     
-export const getGetWeekSummaryQueryOptions = <TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, fetch?: RequestInit}
+export const getGetWeekSummaryQueryOptions = <TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, request?: SecondParameter<typeof http>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetWeekSummaryQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWeekSummary>>> = ({ signal }) => getWeekSummary(params, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWeekSummary>>> = ({ signal }) => getWeekSummary(params, { signal, ...requestOptions });
 
       
 
@@ -440,7 +423,7 @@ export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSumma
           TError,
           TData
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof http>}
 
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(
@@ -450,16 +433,16 @@ export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSumma
           TError,
           TData
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(
- params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, fetch?: RequestInit}
+ params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 
 export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(
- params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, fetch?: RequestInit}
+ params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
@@ -492,7 +475,7 @@ export const getAuthenticateFromGithubUrl = () => {
 
 export const authenticateFromGithub = async (authenticateFromGithubBody: AuthenticateFromGithubBody, options?: RequestInit): Promise<authenticateFromGithubResponse> => {
   
-  const res = await fetch(getAuthenticateFromGithubUrl(),
+  return http<Promise<authenticateFromGithubResponse>>(getAuthenticateFromGithubUrl(),
   {      
     ...options,
     method: 'POST',
@@ -500,20 +483,15 @@ export const authenticateFromGithub = async (authenticateFromGithubBody: Authent
     body: JSON.stringify(
       authenticateFromGithubBody,)
   }
-
-  )
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
+);}
 
 
 
 
 export const getAuthenticateFromGithubMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authenticateFromGithub>>, TError,{data: AuthenticateFromGithubBody}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authenticateFromGithub>>, TError,{data: AuthenticateFromGithubBody}, TContext>, request?: SecondParameter<typeof http>}
 ): UseMutationOptions<Awaited<ReturnType<typeof authenticateFromGithub>>, TError,{data: AuthenticateFromGithubBody}, TContext> => {
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
@@ -521,7 +499,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof authenticateFromGithub>>, {data: AuthenticateFromGithubBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  authenticateFromGithub(data,fetchOptions)
+          return  authenticateFromGithub(data,requestOptions)
         }
 
         
@@ -534,7 +512,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?? {};
     export type AuthenticateFromGithubMutationError = unknown
 
     export const useAuthenticateFromGithub = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authenticateFromGithub>>, TError,{data: AuthenticateFromGithubBody}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authenticateFromGithub>>, TError,{data: AuthenticateFromGithubBody}, TContext>, request?: SecondParameter<typeof http>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof authenticateFromGithub>>,
         TError,
@@ -564,19 +542,14 @@ export const getGetProfileUrl = () => {
 
 export const getProfile = async ( options?: RequestInit): Promise<getProfileResponse> => {
   
-  const res = await fetch(getGetProfileUrl(),
+  return http<Promise<getProfileResponse>>(getGetProfileUrl(),
   {      
     ...options,
     method: 'GET'
     
     
   }
-
-  )
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
+);}
 
 
 
@@ -585,16 +558,16 @@ export const getGetProfileQueryKey = () => {
     }
 
     
-export const getGetProfileQueryOptions = <TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, fetch?: RequestInit}
+export const getGetProfileQueryOptions = <TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, request?: SecondParameter<typeof http>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetProfileQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProfile>>> = ({ signal }) => getProfile({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProfile>>> = ({ signal }) => getProfile({ signal, ...requestOptions });
 
       
 
@@ -614,7 +587,7 @@ export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TE
           TError,
           TData
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof http>}
 
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>(
@@ -624,16 +597,16 @@ export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TE
           TError,
           TData
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 
 export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
@@ -666,19 +639,14 @@ export const getGetUserLevelAndExperienceUrl = () => {
 
 export const getUserLevelAndExperience = async ( options?: RequestInit): Promise<getUserLevelAndExperienceResponse> => {
   
-  const res = await fetch(getGetUserLevelAndExperienceUrl(),
+  return http<Promise<getUserLevelAndExperienceResponse>>(getGetUserLevelAndExperienceUrl(),
   {      
     ...options,
     method: 'GET'
     
     
   }
-
-  )
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
+);}
 
 
 
@@ -687,16 +655,16 @@ export const getGetUserLevelAndExperienceQueryKey = () => {
     }
 
     
-export const getGetUserLevelAndExperienceQueryOptions = <TData = Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError, TData>>, fetch?: RequestInit}
+export const getGetUserLevelAndExperienceQueryOptions = <TData = Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError, TData>>, request?: SecondParameter<typeof http>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserLevelAndExperienceQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserLevelAndExperience>>> = ({ signal }) => getUserLevelAndExperience({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserLevelAndExperience>>> = ({ signal }) => getUserLevelAndExperience({ signal, ...requestOptions });
 
       
 
@@ -716,7 +684,7 @@ export function useGetUserLevelAndExperience<TData = Awaited<ReturnType<typeof g
           TError,
           TData
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof http>}
 
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 export function useGetUserLevelAndExperience<TData = Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError = unknown>(
@@ -726,16 +694,16 @@ export function useGetUserLevelAndExperience<TData = Awaited<ReturnType<typeof g
           TError,
           TData
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 export function useGetUserLevelAndExperience<TData = Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 
 export function useGetUserLevelAndExperience<TData = Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserLevelAndExperience>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
 
