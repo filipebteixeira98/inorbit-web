@@ -19,7 +19,7 @@ import {
   RadioGroupItem,
 } from './ui/radio-group'
 
-import { createGoal } from '../http/create-goal'
+import { useCreateGoal } from '../http/generated/api'
 
 const createGoalForm = z.object({
   title: z.string().min(1, 'Please, inform the activity you want to carry out'),
@@ -36,10 +36,17 @@ export function CreateGoal() {
       resolver: zodResolver(createGoalForm),
     })
 
-  async function handleCreateGoal(data: CreateGoalForm) {
+  const { mutateAsync: createGoal } = useCreateGoal()
+
+  async function handleCreateGoal({
+    title,
+    desiredWeeklyFrequency,
+  }: CreateGoalForm) {
     await createGoal({
-      title: data.title,
-      desiredWeeklyFrequency: data.desiredWeeklyFrequency,
+      data: {
+        title,
+        desiredWeeklyFrequency,
+      },
     })
 
     queryClient.invalidateQueries({ queryKey: ['summary'] })

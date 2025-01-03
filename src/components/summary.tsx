@@ -1,5 +1,4 @@
 import { CheckCircle2, Plus } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en'
 
@@ -8,22 +7,20 @@ import { DialogTrigger } from './ui/dialog'
 import { Progress, ProgressIndicator } from './ui/progress-bar'
 import { Separator } from './ui/separator'
 
-import { getSummary } from '../http/get-summary'
-
 import { PendingGoals } from './pending-goals'
+
+import type { GetWeekSummary200Summary } from '../http/generated/api'
 
 import { InOrbitIcon } from './in-orbit-icon'
 
 dayjs.locale(en)
 
-export function Summary() {
-  const { data } = useQuery({
-    queryKey: ['summary'],
-    queryFn: getSummary,
-    staleTime: 1000 * 60,
-  })
+interface SummaryProps {
+  summary: GetWeekSummary200Summary
+}
 
-  if (!data) {
+export function Summary({ summary }: SummaryProps) {
+  if (!summary) {
     return null
   }
 
@@ -31,7 +28,9 @@ export function Summary() {
 
   const lastDayOfWeek = dayjs().endOf('week').format('MMM D')
 
-  const completedPercentage = Math.round((data.completed * 100) / data.total)
+  const completedPercentage = summary.total
+    ? Math.round((summary.completed * 100) / summary.total)
+    : 0
 
   return (
     <div className="py-10 max-w-[480px] px-5 mx-auto flex flex-col gap-6">
@@ -53,7 +52,7 @@ export function Summary() {
         </DialogTrigger>
       </div>
       <div className="flex flex-col gap-3">
-        <Progress value={data.completed} max={data.total}>
+        <Progress value={summary.completed} max={summary.total ?? 0}>
           <ProgressIndicator
             style={{
               width: `${completedPercentage}%`,
@@ -63,8 +62,9 @@ export function Summary() {
         <div className="flex items-center justify-between text-xs text-zinc-400">
           <span>
             You completed{' '}
-            <span className="text-zinc-100">{data?.completed}</span> out of{' '}
-            <span className="text-zinc-100">{data?.total}</span> goals this week
+            <span className="text-zinc-100">{summary?.completed}</span> out of{' '}
+            <span className="text-zinc-100">{summary?.total}</span> goals this
+            week
           </span>
           <span>{completedPercentage}%</span>
         </div>
@@ -73,36 +73,39 @@ export function Summary() {
       <PendingGoals />
       <div className="flex flex-col gap-6">
         <h2 className="text-xl font-medium">Your week</h2>
-        {Object.entries(data.goalsPerDay).map(([date, goals]) => {
-          const weekDay = dayjs(date).format('dddd')
+        {summary.goalsPerDay &&
+          Object.entries(summary.goalsPerDay).map(([date, goals]) => {
+            const weekDay = dayjs(date).format('dddd')
 
-          const formattedDate = dayjs(date).format('MMMM D')
+            const formattedDate = dayjs(date).format('MMMM D')
 
-          return (
-            <div key={date} className="flex flex-col gap-4">
-              <h3 className="font-medium capitalize">
-                <span className="capitalize">{weekDay}</span>{' '}
-                <span className="text-zinc-400 text-xs">({formattedDate})</span>
-              </h3>
-              <ul className="flex flex-col gap-3">
-                {goals.map(goal => {
-                  const time = dayjs(goal.completedAt).format('hh:mm a')
+            return (
+              <div key={date} className="flex flex-col gap-4">
+                <h3 className="font-medium capitalize">
+                  <span className="capitalize">{weekDay}</span>{' '}
+                  <span className="text-zinc-400 text-xs">
+                    ({formattedDate})
+                  </span>
+                </h3>
+                <ul className="flex flex-col gap-3">
+                  {goals.map(goal => {
+                    const parsedTime = dayjs(goal.completedAt).format('hh:mm a')
 
-                  return (
-                    <li key={goal.id} className="flex items-center gap-2">
-                      <CheckCircle2 className="size-4 text-pink-500" />
-                      <span className="text-xs text-zinc-400">
-                        You completed "
-                        <span className="text-zinc-100">{goal.title}</span>" at{' '}
-                        <span className="text-zinc-100">{time}</span>
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-          )
-        })}
+                    return (
+                      <li key={goal.id} className="flex items-center gap-2">
+                        <CheckCircle2 className="size-4 text-pink-500" />
+                        <span className="text-xs text-zinc-400">
+                          You completed "
+                          <span className="text-zinc-100">{goal.title}</span>"
+                          at <span className="text-zinc-100">{parsedTime}</span>
+                        </span>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )
+          })}
       </div>
     </div>
   )
