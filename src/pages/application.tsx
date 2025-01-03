@@ -1,23 +1,30 @@
-import { useQuery } from '@tanstack/react-query'
-
-import { Dialog } from '../components/ui/dialog'
+import { Loader2 } from 'lucide-react'
 
 import { CreateGoal } from '../components/create-goal'
+import { Dialog } from '../components/ui/dialog'
 import { EmptyGoals } from '../components/empty-goals'
 import { Summary } from '../components/summary'
 
-import { getSummary } from '../http/get-summary'
+import { useGetWeekSummary } from '../http/generated/api'
 
 export function Application() {
-  const { data } = useQuery({
-    queryKey: ['summary'],
-    queryFn: getSummary,
-    staleTime: 1000 * 60,
-  })
+  const { data, isLoading } = useGetWeekSummary()
+
+  if (isLoading || !data) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="text-zinc-500 animate-spin size-6" />
+      </div>
+    )
+  }
 
   return (
     <Dialog>
-      {data?.total && data.total > 0 ? <Summary /> : <EmptyGoals />}
+      {data?.summary.total && data.summary.total > 0 ? (
+        <Summary summary={data.summary} />
+      ) : (
+        <EmptyGoals />
+      )}
       <CreateGoal />
     </Dialog>
   )
