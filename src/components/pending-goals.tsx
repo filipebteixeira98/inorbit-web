@@ -3,7 +3,12 @@ import { Plus } from 'lucide-react'
 
 import { OutlineButton } from './ui/outline-button'
 
-import { useCreateCompletion, useGetPendingGoals } from '../http/generated/api'
+import {
+  useCreateCompletion,
+  useGetPendingGoals,
+  getGetWeekSummaryQueryKey,
+  getGetPendingGoalsQueryKey,
+} from '../http/generated/api'
 
 export function PendingGoals() {
   const queryClient = useQueryClient()
@@ -19,9 +24,9 @@ export function PendingGoals() {
   async function handleCompleteGoal(goalId: string) {
     await createGoalCompletion({ data: { goalId } })
 
-    queryClient.invalidateQueries({ queryKey: ['summary'] })
+    queryClient.invalidateQueries({ queryKey: getGetWeekSummaryQueryKey() })
 
-    queryClient.invalidateQueries({ queryKey: ['pending-goals'] })
+    queryClient.invalidateQueries({ queryKey: getGetPendingGoalsQueryKey() })
   }
 
   return (

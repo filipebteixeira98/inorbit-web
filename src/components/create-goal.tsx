@@ -19,7 +19,11 @@ import {
   RadioGroupItem,
 } from './ui/radio-group'
 
-import { useCreateGoal } from '../http/generated/api'
+import {
+  useCreateGoal,
+  getGetWeekSummaryQueryKey,
+  getGetPendingGoalsQueryKey,
+} from '../http/generated/api'
 
 const createGoalForm = z.object({
   title: z.string().min(1, 'Please, inform the activity you want to carry out'),
@@ -49,9 +53,9 @@ export function CreateGoal() {
       },
     })
 
-    queryClient.invalidateQueries({ queryKey: ['summary'] })
+    queryClient.invalidateQueries({ queryKey: getGetWeekSummaryQueryKey() })
 
-    queryClient.invalidateQueries({ queryKey: ['pending-goals'] })
+    queryClient.invalidateQueries({ queryKey: getGetPendingGoalsQueryKey() })
 
     reset()
   }
