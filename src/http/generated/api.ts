@@ -55,12 +55,17 @@ export type GetWeekSummary200SummaryGoalsPerDayItem = {
   title: string;
 };
 
-export type GetWeekSummary200SummaryGoalsPerDay = {[key: string]: GetWeekSummary200SummaryGoalsPerDayItem[]};
+/**
+ * @nullable
+ */
+export type GetWeekSummary200SummaryGoalsPerDay = {[key: string]: GetWeekSummary200SummaryGoalsPerDayItem[]} | null;
 
 export type GetWeekSummary200Summary = {
   completed: number;
+  /** @nullable */
   goalsPerDay: GetWeekSummary200SummaryGoalsPerDay;
-  total: number;
+  /** @nullable */
+  total: number | null;
 };
 
 export type GetWeekSummary200 = {
@@ -126,21 +131,15 @@ type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 /**
  * Get pending goals
  */
-export type getPendingGoalsResponse = {
-  data: GetPendingGoals200;
-  status: number;
-  headers: Headers;
-}
-
 export const getGetPendingGoalsUrl = () => {
 
 
   return `http://localhost:3333/pending-goals`
 }
 
-export const getPendingGoals = async ( options?: RequestInit): Promise<getPendingGoalsResponse> => {
+export const getPendingGoals = async ( options?: RequestInit): Promise<GetPendingGoals200> => {
   
-  return http<Promise<getPendingGoalsResponse>>(getGetPendingGoalsUrl(),
+  return http<Promise<GetPendingGoals200>>(getGetPendingGoalsUrl(),
   {      
     ...options,
     method: 'GET'
@@ -223,21 +222,15 @@ export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingG
 /**
  * Create a goal
  */
-export type createGoalResponse = {
-  data: CreateGoal201;
-  status: number;
-  headers: Headers;
-}
-
 export const getCreateGoalUrl = () => {
 
 
   return `http://localhost:3333/goals`
 }
 
-export const createGoal = async (createGoalBody: CreateGoalBody, options?: RequestInit): Promise<createGoalResponse> => {
+export const createGoal = async (createGoalBody: CreateGoalBody, options?: RequestInit): Promise<CreateGoal201> => {
   
-  return http<Promise<createGoalResponse>>(getCreateGoalUrl(),
+  return http<Promise<CreateGoal201>>(getCreateGoalUrl(),
   {      
     ...options,
     method: 'POST',
@@ -290,21 +283,15 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 /**
  * Complete a goal
  */
-export type createCompletionResponse = {
-  data: CreateCompletion201;
-  status: number;
-  headers: Headers;
-}
-
 export const getCreateCompletionUrl = () => {
 
 
   return `http://localhost:3333/completions`
 }
 
-export const createCompletion = async (createCompletionBody: CreateCompletionBody, options?: RequestInit): Promise<createCompletionResponse> => {
+export const createCompletion = async (createCompletionBody: CreateCompletionBody, options?: RequestInit): Promise<CreateCompletion201> => {
   
-  return http<Promise<createCompletionResponse>>(getCreateCompletionUrl(),
+  return http<Promise<CreateCompletion201>>(getCreateCompletionUrl(),
   {      
     ...options,
     method: 'POST',
@@ -357,12 +344,6 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 /**
  * Get week summary
  */
-export type getWeekSummaryResponse = {
-  data: GetWeekSummary200;
-  status: number;
-  headers: Headers;
-}
-
 export const getGetWeekSummaryUrl = (params?: GetWeekSummaryParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -376,9 +357,9 @@ export const getGetWeekSummaryUrl = (params?: GetWeekSummaryParams,) => {
   return normalizedParams.size ? `http://localhost:3333/summary?${normalizedParams.toString()}` : `http://localhost:3333/summary`
 }
 
-export const getWeekSummary = async (params?: GetWeekSummaryParams, options?: RequestInit): Promise<getWeekSummaryResponse> => {
+export const getWeekSummary = async (params?: GetWeekSummaryParams, options?: RequestInit): Promise<GetWeekSummary200> => {
   
-  return http<Promise<getWeekSummaryResponse>>(getGetWeekSummaryUrl(params),
+  return http<Promise<GetWeekSummary200>>(getGetWeekSummaryUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -461,21 +442,15 @@ export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSumma
 /**
  * Authenticate user from Github code
  */
-export type authenticateFromGithubResponse = {
-  data: AuthenticateFromGithub201;
-  status: number;
-  headers: Headers;
-}
-
 export const getAuthenticateFromGithubUrl = () => {
 
 
   return `http://localhost:3333/auth/github`
 }
 
-export const authenticateFromGithub = async (authenticateFromGithubBody: AuthenticateFromGithubBody, options?: RequestInit): Promise<authenticateFromGithubResponse> => {
+export const authenticateFromGithub = async (authenticateFromGithubBody: AuthenticateFromGithubBody, options?: RequestInit): Promise<AuthenticateFromGithub201> => {
   
-  return http<Promise<authenticateFromGithubResponse>>(getAuthenticateFromGithubUrl(),
+  return http<Promise<AuthenticateFromGithub201>>(getAuthenticateFromGithubUrl(),
   {      
     ...options,
     method: 'POST',
@@ -528,21 +503,15 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 /**
  * Get authenticated user profile
  */
-export type getProfileResponse = {
-  data: GetProfile200;
-  status: number;
-  headers: Headers;
-}
-
 export const getGetProfileUrl = () => {
 
 
   return `http://localhost:3333/profile`
 }
 
-export const getProfile = async ( options?: RequestInit): Promise<getProfileResponse> => {
+export const getProfile = async ( options?: RequestInit): Promise<GetProfile200> => {
   
-  return http<Promise<getProfileResponse>>(getGetProfileUrl(),
+  return http<Promise<GetProfile200>>(getGetProfileUrl(),
   {      
     ...options,
     method: 'GET'
@@ -625,21 +594,15 @@ export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TE
 /**
  * Get user level and experience
  */
-export type getUserLevelAndExperienceResponse = {
-  data: GetUserLevelAndExperience200;
-  status: number;
-  headers: Headers;
-}
-
 export const getGetUserLevelAndExperienceUrl = () => {
 
 
   return `http://localhost:3333/profile/gamification`
 }
 
-export const getUserLevelAndExperience = async ( options?: RequestInit): Promise<getUserLevelAndExperienceResponse> => {
+export const getUserLevelAndExperience = async ( options?: RequestInit): Promise<GetUserLevelAndExperience200> => {
   
-  return http<Promise<getUserLevelAndExperienceResponse>>(getGetUserLevelAndExperienceUrl(),
+  return http<Promise<GetUserLevelAndExperience200>>(getGetUserLevelAndExperienceUrl(),
   {      
     ...options,
     method: 'GET'
